@@ -12,7 +12,7 @@ module DiceOfDoom
 
         # p node.class
         tmp = nil
-        print("  ", node.value)
+        print("  ", node.board)
         node.child.size.times do |i|
           tmp = node.child[i]
           self.show(tmp)
