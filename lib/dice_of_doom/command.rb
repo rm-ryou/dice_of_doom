@@ -4,16 +4,6 @@ module DiceOfDoom
     def initialize
       @game_tree = ::DiceOfDoom::GameTree::Game.new.tree
       @cur_node = @game_tree
-      # @cur_node = @game_tree.child[0].child[0].child[0]
-      # p @cur_node
-      # tmp = @cur_node.child[0].child[0].child
-      # p tmp.size
-      # puts
-      # tmp.each do |t|
-      #   p tmp
-      #   puts
-      #   puts
-      # end
       player2human
     end
 
@@ -48,16 +38,16 @@ module DiceOfDoom
     def handle_human
       puts "choose your move:"
       moves = @cur_node.child
-      # p @cur_node.first_move
       i = 0
-      # unless @cur_node.first_move?
-      #   puts "#{i + 1}. end turn"
-      #   i += 1
-      # end
+      unless @cur_node.first_move?
+        puts "#{i + 1}. end turn"
+        i += 1
+      end
       while moves[i]
-        # p "moves[#{i}] = #{moves[i]}"
-        print "#{i + 1}. "
-        puts "#{moves[i].attack_lst[0]} -> #{moves[i].attack_lst[1]}"
+        if moves[i].attack_lst
+          print "#{i + 1}. "
+          puts "#{moves[i].attack_lst[0]} -> #{moves[i].attack_lst[1]}"
+        end
         i += 1
       end
       num = gets.to_i

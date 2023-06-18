@@ -1,8 +1,10 @@
-[2, 3]
-[0, 2]
-[1, 3]
-[0, 3]
-[1, 3]
-[0, 2]
-<DiceOfDoom::GameTree::Node:0x0000000158878c60 @board=[[1, 1], [1, 2], [1, 1], [0, 1]], @player=1, @spare=1, @first_move=false, @attack_lst=[0, 2], 
-  @child=[#<DiceOfDoom::GameTree::Node:0x0000000158883ef8 @board=[[1, 1], [1, 1], [1, 1], [1, 1]], @player=1, @spare=2, @first_move=false, @attack_lst=[1, 3], @child=[#<DiceOfDoom::GameTree::Node:0x00000001588831b0 @board=[[1, 1], [1, 1], [1, 1], [1, 1]], @player=0, @spare=0, @first_move=true, @attack_lst=[], @child=[]>]>, #<DiceOfDoom::GameTree::Node:0x0000000158882e18 @board=[[1, 1], [1, 2], [1, 1], [0, 1]], @player=0, @spare=0, @first_move=true, @attack_lst=[], @child=[]>, #<DiceOfDoom::GameTree::Node:0x0000000158882a58 @board=[[1, 1], [1, 1], [1, 1], [1, 1]], @player=0, @spare=0, @first_move=true, @attack_lst=[], @child=[]>]>
+"**********"
+<DiceOfDoom::GameTree::Node:0x000000014796fdf0 @board=[[1, 2], [1, 2], [0, 1], [0, 1]], @player=1, @spare=0, @first_move=true, @attack_lst=nil, @child=[
+
+    <DiceOfDoom::GameTree::Node:0x000000014796de60 @board=[[1, 1], [1, 2], [1, 1], [0, 1]], @player=1, @spare=1, @first_move=false, @attack_lst=[0, 2], @child=[#<DiceOfDoom::GameTree::Node:0x0000000147977230 @board=[[1, 1], [1, 2], [1, 1], [0, 1]], @player=0, @spare=1, @first_move=true, @attack_lst=nil, @child=[]>, 
+
+        <DiceOfDoom::GameTree::Node:0x0000000147977ca8 @board=[[1, 2], [1, 1], [1, 1], [1, 1]], @player=1, @spare=2, @first_move=false, @attack_lst=[1, 3], @child=[<DiceOfDoom::GameTree::Node:0x0000000147976650 @board=[[1, 2], [1, 1], [1, 1], [1, 1]], @player=0, @spare=2, @first_move=true, @attack_lst=nil, @child=[]>]>]>, 
+
+    <DiceOfDoom::GameTree::Node:0x000000014796d0c8 @board=[[1, 1], [1, 2], [0, 1], [1, 1]], @player=1, @spare=1, @first_move=false, @attack_lst=[0, 3], @child=[#<DiceOfDoom::GameTree::Node:0x0000000147975390 @board=[[1, 1], [1, 2], [0, 1], [1, 1]], @player=0, @spare=1, @first_move=true, @attack_lst=nil, @child=[]>]>, 
+
+    <DiceOfDoom::GameTree::Node:0x000000014796c808 @board=[[1, 2], [1, 1], [0, 1], [1, 1]], @player=1, @spare=1, @first_move=false, @attack_lst=[1, 3], @child=[#<DiceOfDoom::GameTree::Node:0x000000014797ef80 @board=[[1, 2], [1, 1], [0, 1], [1, 1]], @player=0, @spare=1, @first_move=true, @attack_lst=nil, @child=[]>, #<DiceOfDoom::GameTree::Node:0x000000014797fa98 @board=[[1, 2], [1, 1], [1, 1], [1, 1]], @player=1, @spare=2, @first_move=false, @attack_lst=[0, 2], @child=[#<DiceOfDoom::GameTree::Node:0x000000014797ddb0 @board=[[1, 2], [1, 1], [1, 1], [1, 1]], @player=0, @spare=2, @first_move=true, @attack_lst=nil, @child=[]>]>]>]>

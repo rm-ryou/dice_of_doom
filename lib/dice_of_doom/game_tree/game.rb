@@ -8,69 +8,54 @@ module DiceOfDoom
       def initialize
         @game_tree = Tree.new
         board = [ [ 1, 2 ], [ 1, 2 ], [ 0, 2 ], [ 1, 1 ] ]
-        # board = gen_board
-
-
-
         @cur_node = @game_tree.root = Node.new(board, 0)
-
-        add_passing_move(@game_tree.root, attacking_moves(@game_tree.root))
-        # create_tree(@game_tree.root, attacking_moves(@game_tree.root))
-        # add_passing_move(nil, attacking_moves(@game_tree.root))
-        # p attacking_moves(@game_tree.root)
-
+        # @cur_node = @game_tree.root = Node.new(gen_board, 0)
+        first_moves = add_passing_move(@game_tree.root, attacking_moves(@game_tree.root))
+        create_tree(@cur_node, first_moves)
+        # p @game_tree.root
       end
 
       def tree
         @game_tree.root
       end
 
-      def create_tree(parent, node)
-        parent.add_child(node)
-        add_passing_move(node, attacking_moves(node))
+      def create_tree(parent, moves)
+        parent.child = moves
+        parent.child.each { |new_parent| 
+          new_moves = add_passing_move(new_parent, attacking_moves(new_parent))
+          create_tree(new_parent, new_moves)
+        }
       end
 
       def add_passing_move(cur_node, moves)
-        return if cur_node.first_move == true
-        p moves[0].attack_lst
-        # create_tree(cur_node, Node.new(moves[0].board, (moves[0].player + 1) % ::NUM_PLAYERS))
-        i = 0
-          puts "board = #{cur_node.board}"
-        while moves[i]
-          add_new_dice(moves[i], ->(player) { player == moves[i].player }, moves[i].spare - 1)
-          # add_new_dice(moves[i], ->(player) { player == moves[i].player }, cur_node.spare - 1)
-          puts "attack lst = #{moves[i].attack_lst[0]} -> #{moves[i].attack_lst[1]}"
-          create_tree(cur_node, Node.new(moves[i].board, (moves[i].player + 1) % ::NUM_PLAYERS))
-          i += 1
+        return moves if cur_node.first_move?
+        moves.each do |move|
+          add_new_dice(move, ->(player) { player == move.player }, move.spare - 1)
+          move = Node.new(move.board, (move.player + 1) % ::NUM_PLAYERS)
         end
+        # end turn用
+        moves.unshift(Node.new(dup_board(cur_node.board), (cur_node.player + 1) % ::NUM_PLAYERS))
+        moves
       end
 
       def attacking_moves(parent_node)
         player = ->(pos) { parent_node.board[pos][0] }
         dice   = ->(pos) { parent_node.board[pos][1] }
-        # end turn 用
-        # moves = []
-        # moves = parent_node.first_move? ? [] : [parent_node]
-        moves = [parent_node]
+        moves = []
         (0...::BOARD_HEXNUM).each do |src|
           # srcが攻撃者なため
           next if player.call(src) != parent_node.player
           neighbors(src).each do |neighbor|
             if player.call(neighbor) != player.call(src) && dice.call(src) > dice.call(neighbor)
+              attack_lst = [src, neighbor]
               attacked_board = board_attack(dup_board(parent_node.board), parent_node.player, src, neighbor, dice.call(src))
               spare = dice.call(neighbor)
-              next_node = Node.new(attacked_board, parent_node.player, parent_node.spare + spare, false)
-              next_node.attack_lst << src << neighbor
-              # p next_node.attack_lst
-              moves << next_node
-              create_tree(parent_node, next_node)
+              move = Node.new(attacked_board, parent_node.player, parent_node.spare + spare, false, attack_lst)
+              moves << move
             end
           end
         end
-        # p "moves = #{moves}"
-        # puts
-        return moves.empty? ? [parent_node] : moves
-        # moves
+        moves
       end
     end
   end
