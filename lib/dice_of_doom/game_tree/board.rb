@@ -42,12 +42,6 @@ module DiceOfDoom
         new_board
       end
 
-      def player(pos)
-        p @board
-        puts "self = #{self}"
-        # self[pos][0]
-      end
-
       def gen_board
         gen_array.map.with_index { |elt, idx| elt = [idx < ::NUM_PLAYERS ? 0 : 1, gen_random_num] }
       end
