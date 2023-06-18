@@ -8,8 +8,9 @@ module DiceOfDoom
       def initialize
         @game_tree = Tree.new
         board = [ [ 1, 2 ], [ 1, 2 ], [ 0, 2 ], [ 1, 1 ] ]
-        # board = [ [ 0, 1 ], [ 0, 3 ], [ 1, 1 ], [ 1, 2 ] ]
+        board = [ [ 0, 3 ], [ 1, 3 ], [ 0, 2 ], [ 1, 2 ] ]
         @cur_node = @game_tree.root = Node.new(board, 0)
+        # @cur_node = @game_tree.root = Node.new(board, 1)
         # @cur_node = @game_tree.root = Node.new(gen_board, 0)
         first_moves = add_passing_move(@game_tree.root, attacking_moves(@game_tree.root))
         create_tree(@cur_node, first_moves)
@@ -35,7 +36,10 @@ module DiceOfDoom
           move = Node.new(move.board, (move.player + 1) % ::NUM_PLAYERS)
         end
         # end turn用
-        moves.unshift(Node.new(dup_board(cur_node.board), (cur_node.player + 1) % ::NUM_PLAYERS))
+        tmp = Node.new(dup_board(cur_node.board), cur_node.player, cur_node.spare, cur_node.first_move)
+        add_new_dice(tmp, ->(player) { player == tmp.player }, tmp.spare - 1)
+        moves.unshift(Node.new(tmp.board, (cur_node.player + 1) % ::NUM_PLAYERS))
+        # moves.unshift(Node.new(dup_board(cur_node.board), (cur_node.player + 1) % ::NUM_PLAYERS))
         moves
       end
 

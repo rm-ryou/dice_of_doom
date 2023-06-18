@@ -4,18 +4,41 @@ module DiceOfDoom
     def initialize
       @game_tree = ::DiceOfDoom::GameTree::Game.new.tree
       @cur_node = @game_tree
-      player2human
+      # player2human
+      play_vs_computer
     end
 
 
-    def rate_position
-      unless @cur_node.child.empty?
+    def rate_position(node, player)
+      unless node.child.empty?
+        ratings = get_ratings(node)
+        if player == cur_player
+          ratings.max
+        else
+          ratings.min
+        end
       else
-        winners
+        hex = winners
+        unless hex.include?(cur_player)
+          0
+        else
+          1 / hex.size
+        end
       end
     end
 
-    def handle_computer
+    def get_ratings(node)
+      node.child.map do |next_node|
+        # p next_node
+        rate_position(next_node, next_node.player)
+      end
+    end
+
+    def handle_computer(node)
+      # node = @cur_node
+      ratings = get_ratings(node)
+      p ratings
+      @cur_node = @cur_node.child[ratings.index(ratings.max)]
     end
 
     def play_vs_computer
@@ -23,13 +46,16 @@ module DiceOfDoom
       if @cur_node.child.empty?
         return announce_winner
       else
-        handle_human    if player == 0
-        handle_computer if player == 1
+        if cur_player == 0
+          handle_human
+        else
+          handle_computer(@cur_node)
+        end
       end
       play_vs_computer
     end
 
-    def player
+    def cur_player
       @cur_node.player
     end
 
