@@ -7,6 +7,7 @@ module DiceOfDoom
         @board      = board
         @player     = player
         @spare      = spare
+        @first_move = first_move
         @attack_lst = []
         @child      = []
       end

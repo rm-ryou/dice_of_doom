@@ -3,6 +3,7 @@ module DiceOfDoom
     module Board
 
       def add_new_dice(state, is_territory, spare_dice)
+        return if spare_dice == 0
         loop do
           before_spare_dice = spare_dice
           state.board.each do |ary|
