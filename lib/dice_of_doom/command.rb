@@ -7,9 +7,37 @@ module DiceOfDoom
       player2human
     end
 
+
+    def rate_position
+      unless @cur_node.child.empty?
+      else
+        winners
+      end
+    end
+
+    def handle_computer
+    end
+
+    def play_vs_computer
+      print_info
+      if @cur_node.child.empty?
+        return announce_winner
+      else
+        handle_human    if player == 0
+        handle_computer if player == 1
+      end
+      play_vs_computer
+    end
+
+    def player
+      @cur_node.player
+    end
+
+
+
     def player2human
       print_info
-      if @cur_node.child.compact.empty?
+      if @cur_node.child.empty?
         return announce_winner
       else
         handle_human
@@ -58,7 +86,7 @@ module DiceOfDoom
     def announce_winner
       hex = winners
       if hex.size == 1
-        puts "The winner is #{(hex.index(hex.max) + 97).send(:chr)}"
+        puts "The winner is #{(hex.first + 97).send(:chr)}"
       else
         print "The game is a tie between "
         hex.size.times do |n|
