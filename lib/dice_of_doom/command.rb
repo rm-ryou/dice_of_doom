@@ -50,12 +50,30 @@ module DiceOfDoom
         end
         i += 1
       end
+      # TODO validation
       num = gets.to_i
       @cur_node = moves[num - 1]
     end
 
     def announce_winner
-      puts "game is end"
+      hex = winners
+      if hex.size == 1
+        puts "The winner is #{(hex.index(hex.max) + 97).send(:chr)}"
+      else
+        print "The game is a tie between "
+        hex.size.times do |n|
+          print "#{(n + 97).send(:chr)}, "
+        end
+        puts
+      end
+    end
+
+    def winners
+      hex = Array.new(::NUM_PLAYERS, 0)
+      (0...::BOARD_HEXNUM).each do |i|
+        hex[@cur_node.board[i][0]] += 1
+      end
+      hex.each_index.select { |i| hex[i] == hex.max }
     end
   end
 end
