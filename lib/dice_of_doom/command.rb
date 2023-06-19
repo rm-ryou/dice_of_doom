@@ -105,7 +105,7 @@ module DiceOfDoom
         i += 1
       end
       # TODO validation
-      num = gets.to_i
+      num = STDIN.gets.to_i
       @cur_node = moves[num - 1]
     end
 
