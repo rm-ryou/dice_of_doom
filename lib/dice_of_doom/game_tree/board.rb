@@ -23,7 +23,7 @@ module DiceOfDoom
         table = [up, down]
         table << up - 1 << pos - 1    unless pos % ::BOARD_SIZE == 0
         table << pos + 1 << down + 1  unless (pos + 1) % ::BOARD_SIZE == 0
-        table.map.select { |num| num >= 0 && num < ::BOARD_HEXNUM }
+        table.map.sort.select { |num| num >= 0 && num < ::BOARD_HEXNUM }
       end
 
       def board_attack(board, player, src, dst, dice)

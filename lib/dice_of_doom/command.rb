@@ -13,8 +13,10 @@ module DiceOfDoom
       unless node.child.empty?
         ratings = get_ratings(node)
         if player == cur_player
+          # get_ratings(node).max
           ratings.max
         else
+          # get_ratings(node).min
           ratings.min
         end
       else
