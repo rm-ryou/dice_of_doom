@@ -31,15 +31,13 @@ module DiceOfDoom
 
     def get_ratings(node)
       node.child.map do |next_node|
-        # p next_node
         rate_position(next_node, next_node.player)
       end
     end
 
-    def handle_computer(node)
+    def handle_computer
       # node = @cur_node
-      ratings = get_ratings(node)
-      p ratings
+      ratings = get_ratings(@cur_node)
       @cur_node = @cur_node.child[ratings.index(ratings.max)]
     end
 
@@ -51,7 +49,7 @@ module DiceOfDoom
         if cur_player == 0
           handle_human
         else
-          handle_computer(@cur_node)
+          handle_computer
         end
       end
       play_vs_computer

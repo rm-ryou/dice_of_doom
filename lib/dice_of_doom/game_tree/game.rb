@@ -9,9 +9,9 @@ module DiceOfDoom
         @game_tree = Tree.new
         board = [ [ 1, 2 ], [ 1, 2 ], [ 0, 2 ], [ 1, 1 ] ]
         board = [ [ 0, 3 ], [ 1, 3 ], [ 0, 2 ], [ 1, 2 ] ]
-        @cur_node = @game_tree.root = Node.new(board, 0)
+        # @cur_node = @game_tree.root = Node.new(board, 0)
         # @cur_node = @game_tree.root = Node.new(board, 1)
-        # @cur_node = @game_tree.root = Node.new(gen_board, 0)
+        @cur_node = @game_tree.root = Node.new(gen_board, 0)
         first_moves = add_passing_move(@game_tree.root, attacking_moves(@game_tree.root))
         create_tree(@cur_node, first_moves)
         # p @game_tree.root
