@@ -17,13 +17,29 @@ module DiceOfDoom
         end
       end
 
+      def cache_neighbors(pos, table)
+        @memo[pos] = table.map.sort.select { |num| num >= 0 && num < ::BOARD_HEXNUM }
+        @memo[pos]
+      end
+
+      def show_memo
+        (0...4).each do |i|
+          puts
+          p @memo[i]
+          puts
+        end
+      end
+
       def neighbors(pos)
+        # @memo ||= Array.new(::BOARD_SIZE * ::BOARD_SIZE) { [] }
+        @memo ||= {}
+        return @memo[pos] if @memo[pos]
         up   = pos - ::BOARD_SIZE
         down = pos + ::BOARD_SIZE
         table = [up, down]
         table << up - 1 << pos - 1    unless pos % ::BOARD_SIZE == 0
         table << pos + 1 << down + 1  unless (pos + 1) % ::BOARD_SIZE == 0
-        table.map.sort.select { |num| num >= 0 && num < ::BOARD_HEXNUM }
+        cache_neighbors(pos, table)
       end
 
       def board_attack(board, player, src, dst, dice)
