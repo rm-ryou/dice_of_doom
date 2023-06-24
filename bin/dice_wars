@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
 $:.unshift File.join(__dir__, '../lib')
-require 'dice_wars'
+require "dice_wars"
 
 USAGE =<<EOF
 Command:
@@ -18,7 +18,9 @@ begin
   raise RuntimeError if BOARD_SIZE <= 1
   case PLAYER
   when /^computer$/i
+    puts DiceWars.version
   when /^human$/i
+    puts DiceWars.version
   else
     raise RuntimeError
   end
