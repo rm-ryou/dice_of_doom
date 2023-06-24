@@ -1,3 +1,9 @@
+require "dice_wars/models/board"
+require "dice_wars/models/node"
+require "dice_wars/models/tree"
+
+require "dice_wars/commands/geme_tree"
+
 
 module DiceWars
   VERSION = '1.0.0'.freeze

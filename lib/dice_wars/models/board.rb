@@ -1,8 +1,8 @@
 module DiceWars
-  class Board
+  class Board < Array
     attr_accessor :board
 
-    def initialize(board)
+    def initialize(board = Board.gen_board)
       @board = board
     end
 
