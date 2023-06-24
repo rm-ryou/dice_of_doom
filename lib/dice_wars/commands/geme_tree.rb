@@ -1,12 +1,18 @@
 module DiceWars
   class GameTree
 
-    def initialize
+    def initialize(node = nil)
       @game_tree = Tree.new
-      @board = DiceWars::Board.new
-      p @board.board
-
-      @cur_node = @game_tree.root
+      @cur_node = @game_tree.root = if !node
+                                      Node.new(Board.gen_board, 0)
+                                    else
+                                      Node.new(node.board,
+                                               node.player,
+                                               node.spare,
+                                               node.first_move,
+                                               node.moves)
+                                    end
+      p @cur_node.board
     end
 
     def add_passing_move(moves)
