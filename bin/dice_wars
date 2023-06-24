@@ -24,6 +24,7 @@ begin
   else
     raise RuntimeError
   end
+    geme_tree = DiceWars::GameTree.new
 rescue RuntimeError
   puts USAGE
 end
