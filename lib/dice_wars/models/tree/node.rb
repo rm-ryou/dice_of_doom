@@ -1,7 +1,6 @@
 module DiceWars
   class Node
-    attr_accessor :board, :player, :spare
-    # attr_accessor :data, :child
+    attr_reader :board, :player, :spare, :child
 
     # nodeではdataが与えられてそれをchildに入れることしかしない
     # dataしかしらない
@@ -16,11 +15,19 @@ module DiceWars
       @spare      = spare
       @first_move = first_move
       @moves      = moves
+      @child      = []
     end
 
     def add_child(node)
       @child.push(node)
     end
 
+    # def board
+    #   @board
+    # end
+
+    def first_move?
+      @first_move
+    end
   end
 end
