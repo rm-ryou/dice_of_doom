@@ -18,13 +18,14 @@ begin
   raise RuntimeError if BOARD_SIZE <= 1
   case PLAYER
   when /^computer$/i
-    player = DiceWars::Player.new
+    player = DiceWars::Computer.new
   when /^human$/i
     puts DiceWars.version
   else
     raise RuntimeError
   end
   game = DiceWars::Command.new(player)
+  game.play_vs_computer
 rescue RuntimeError
   puts USAGE
 end

@@ -27,7 +27,7 @@ module DiceWars
 
     def add_new_dice(cur_player, spare_dice)
       loop do
-        num_before_allocationg = spare_dice
+        num_before_allocating = spare_dice
         (0 ... ::BOARD_HEXNUM).each do |i|
           next unless player(i) == cur_player
           if dice(i) < ::MAX_DICE && spare_dice > 0
@@ -48,8 +48,8 @@ module DiceWars
         next if player(src) != cur_player
         neighbors(src).each do |neighbor|
           if player(neighbor) != player(src) && dice(src) > dice(neighbor)
+            dices      << dice(neighbor)
             moves      << attack(dup_board, cur_player, src, neighbor, dice(src))
-            dices      << dice(src)
             attack_lst << [src, neighbor]
           end
         end

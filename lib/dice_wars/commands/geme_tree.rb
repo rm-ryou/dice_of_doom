@@ -13,7 +13,7 @@ module DiceWars
                                           node.player,
                                           node.spare,
                                           node.first_move,
-                                          node.moves)
+                                          node.attack_lst)
                                end
     end
 
