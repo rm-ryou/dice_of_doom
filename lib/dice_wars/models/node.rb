@@ -22,10 +22,6 @@ module DiceWars
       @child.push(node)
     end
 
-    # def board
-    #   @board
-    # end
-
     def first_move?
       @first_move
     end

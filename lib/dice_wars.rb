@@ -1,5 +1,5 @@
-require "dice_wars/models/state/board"
-require "dice_wars/models/tree/node"
+require "dice_wars/models/board"
+require "dice_wars/models/node"
 
 require "dice_wars/commands/geme_tree"
 

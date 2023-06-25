@@ -1,3 +1,5 @@
+# boardのロジック多すぎる
+
 module DiceWars
   class Board < Array
     attr_accessor :board
@@ -23,9 +25,19 @@ module DiceWars
       cache_neighbors(pos, table)
     end
 
-    def add_new_dice
+    def add_new_dice(cur_player, spare_dice)
+      loop do
+        num_before_allocationg = spare_dice
+        (0 ... ::BOARD_HEXNUM).each do |i|
+          next unless player(i) == cur_player
+          if dice(i) < ::MAX_DICE && spare_dice > 0
+            @board[i][1] += 1
+            spare_dice -= 1
+          end
+        end
+        break if spare_dice <= 0 || spare_dice == num_before_allocating
+      end
     end
-
 
     # 単にattackableなboardの配列を返すのみ
     def attackable(cur_player)
