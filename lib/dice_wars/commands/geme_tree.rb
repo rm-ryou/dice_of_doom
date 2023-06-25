@@ -19,6 +19,7 @@ module DiceWars
 
     def next_moves
       @cur_node.add_child(add_passing_move(attacking_moves))
+      @cur_node
     end
 
     def add_passing_move(moves)

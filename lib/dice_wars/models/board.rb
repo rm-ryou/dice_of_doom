@@ -82,6 +82,19 @@ module DiceWars
       new_board
     end
 
+    def draw_board(cur_player)
+      str = ''
+      ::BOARD_SIZE.times do |y|
+        str += "  " * (::BOARD_SIZE - y - 1)
+        ::BOARD_SIZE.times do |x|
+          id = ::BOARD_SIZE * y + x
+          str += "#{cur_player.letter(player(id))}-#{dice(id)} "
+        end
+        str += "\n"
+      end
+      str
+    end
+
     class << self
       def gen_board
         gen_array.map { |ary| ary = [Board.gen_random_player, Board.gen_random_dice] }
