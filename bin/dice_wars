@@ -20,7 +20,7 @@ begin
   when /^computer$/i
     player = DiceWars::Computer.new
   when /^human$/i
-    puts DiceWars.version
+    player = DiceWars::Computer.new
   else
     raise RuntimeError
   end

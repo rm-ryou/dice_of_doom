@@ -1,8 +1,9 @@
 require "dice_wars/models/board"
 require "dice_wars/models/node"
 require "dice_wars/commands/ai"
-require "dice_wars/models/default_player"
-require "dice_wars/models/player"
+require "dice_wars/models/players/default_player"
+require "dice_wars/models/players/computer"
+require "dice_wars/models/players/human"
 
 
 require "dice_wars/commands/geme_tree"

@@ -2,9 +2,6 @@ module DiceWars
   class GameTree
 
     def initialize(node = nil)
-      board = [[1, 1], [0, 2], [0, 2],
-               [0, 3], [1, 3], [1, 3],
-               [1, 3], [1, 2], [1, 1]]
       @game_tree = @cur_node = if !node
                                  Node.new(Board.new(Board.gen_board), 0)
                                  # Node.new(Board.new(board), 0)
@@ -26,12 +23,6 @@ module DiceWars
       return moves if @cur_node.first_move?
       add_new_dice(@cur_node, @cur_node.spare - 1)
       moves.unshift(Node.new(@cur_node.board, (@cur_node.player + 1) % ::NUM_PLAYERS))
-      moves
-      # moves.unshift(@cur_node)
-      # moves.map do |move|
-      #   add_new_dice(move, move.spare - 1 )
-      #   Node.new(move.board, (move.player + 1) % ::NUM_PLAYERS, 0, true, move.attack_lst)
-      # end
     end
 
     def add_new_dice(move, spare)
