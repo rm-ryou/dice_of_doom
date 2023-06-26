@@ -11,22 +11,20 @@ module DiceOfDoom
                               node.first_move,
                               node.attack_lst)
                    end
-
-
-      @game_tree.spare = 3
-      p @game_tree.board.grids
-      @game_tree.board.add_new_dice(@game_tree.player, @game_tree.spare)
-      p @game_tree.board.grids
+    # p @game_tree
+    p attacking_moves
     end
 
     def add_passing_move(moves)
       return moves if @game_tree.first_move?
 
-      @game_tree.board.add_new_dice
+      @game_tree.board.add_new_dice(@game_tree.player, @game_tree.spare - 1)
       moves.unshift(Node.new(@game_tree.board, (@game_tree.player + 1) % ::NUM_PLAYERS))
     end
 
     def attacking_moves
+      @game_tree.board.attacking_moves(@game_tree.player)
+
     end
 
   end

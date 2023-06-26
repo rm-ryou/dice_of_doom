@@ -28,13 +28,13 @@ module DiceOfDoom
     def neighbors_of(mass)
       return @memo_neighbors[mass] if @memo_neighbors.has_key?(mass)
 
-      up    = pos - ::BOARD_SIZE
-      down  = pos + ::BOARD_SIZE
+      up    = mass - ::BOARD_SIZE
+      down  = mass + ::BOARD_SIZE
       neighbors = [up, down]
-      neighbors  << up - 1  << pos - 1  unless pos        % ::BOARD_SIZE == 0
-      neighbors  << pos + 1 << down + 1 unless (pos + 1)  % ::BOARD_SIZE == 0
+      neighbors  << up - 1    << mass - 1 unless mass        % ::BOARD_SIZE == 0
+      neighbors  << mass + 1  << down + 1 unless (mass + 1)  % ::BOARD_SIZE == 0
       cache_neighbors(mass, neighbors)
-      neighbors
+      @memo_neighbors[mass]
     end
 
     def apply_attacking_move(move)
@@ -47,10 +47,10 @@ module DiceOfDoom
 
     def attacking_moves(cur_player)
       attack_lst = []
-      @grids.size do |src|
-        next if player_of(@grid[src]) != cur_player
+      @grids.size.times do |src|
+        next if player_of(@grids[src]) != cur_player
         neighbors_of(src).each do |dst|
-          if player_of(@girds[dst]) != player_of(@grids[src]) && dice_of(@grids[src]) > dice_of(@grids[dst])
+          if player_of(@grids[dst]) != player_of(@grids[src]) && dice_of(@grids[src]) > dice_of(@grids[dst])
             attack_lst << AttackingMove.new(src, dst, cur_player)
           end
         end
