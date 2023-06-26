@@ -19,8 +19,10 @@ module DiceWars
       @cur_node
     end
 
+    # movesとは一眼見ただけでchildnodesとわからない
     def add_passing_move(moves)
       return moves if @cur_node.first_move?
+      
       add_new_dice(@cur_node, @cur_node.spare - 1)
       moves.unshift(Node.new(@cur_node.board, (@cur_node.player + 1) % ::NUM_PLAYERS))
     end

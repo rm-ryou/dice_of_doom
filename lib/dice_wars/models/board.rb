@@ -4,8 +4,12 @@ module DiceWars
   class Board < Array
     attr_accessor :board
 
-    def initialize(board = Board.gen_board)
-      @board = board
+    def initialize(grids = nil)
+      # boardから次のては生成できる＝＞いらない
+      #      ""  diceの数がわから＝＞いらない
+      # @board = board
+      # ↓単数系の複数形にするクラス名とインスタンス名の重複はナンセンス
+      @grids = grids ? grids : Board.gen_grids
     end
 
     def cache_neighbors(pos, table)
@@ -25,22 +29,60 @@ module DiceWars
       cache_neighbors(pos, table)
     end
 
+    def player_of(grid)
+      grid[0]
+    end
+    private :player_of
+
+
+    def dice_of(grid)
+      grid[1]
+    end
+    private :dice_of
+
     def add_new_dice(cur_player, spare_dice)
-      loop do
-        num_before_allocating = spare_dice
-        (0 ... ::BOARD_HEXNUM).each do |i|
-          next unless player(i) == cur_player
-          if dice(i) < ::MAX_DICE && spare_dice > 0
-            @board[i][1] += 1
-            spare_dice -= 1
-          end
+      num_before_allocating = spare_dice
+      while spare_dice <= 0 || spare_dice == num_before_allocating
+        @grids = @grids.map do |grid|
+          next grid unless player_of(grid) == cur_player && spare_dice > 0
+          # player_of(grid)
+          # dice_of(grid)  # gridのdice
+          spare_dice -= 1
+          [player_of(grid), dice_of(grid) + 1]
         end
-        break if spare_dice <= 0 || spare_dice == num_before_allocating
+        # (0 ... ::BOARD_HEXNUM).each do |i|
+        #   next unless player(i) == cur_player
+        #   if dice(i) < ::MAX_DICE && spare_dice > 0
+        #     @board[i][1] += 1
+        #     spare_dice -= 1
+        #   end
+        # end
+        num_before_allocating = spare_dice
       end
+      # loop do
+      #   num_before_allocating = spare_dice
+      #   (0 ... ::BOARD_HEXNUM).each do |i|
+      #     next unless player(i) == cur_player
+      #     if dice(i) < ::MAX_DICE && spare_dice > 0
+      #       @board[i][1] += 1
+      #       spare_dice -= 1
+      #     end
+      #   end
+      #   break if spare_dice <= 0 || spare_dice == num_before_allocating
+      # end
     end
 
+    def apply_attacking_move(move)
+      # attack(@board, @board.player(move.src_index), move.src_index, move.dst_index, @board.dice(move.src_index))
+      attack(@board, move.attacker, move.src_index, move.dst_index, @board.dice(move.src_index))
+      # moveにattackerを追加
+      @board.map.with_index do |grid, idx
+    end
+    # 基本インスタンス変数は渡さない
+
     # 単にattackableなboardの配列を返すのみ
-    def attackable(cur_player)
+    # def attackable(cur_player)
+    def attacking_moves(cur_player)
       moves       = []
       dices       = []
       attack_lst  = []
@@ -48,17 +90,28 @@ module DiceWars
         next if player(src) != cur_player
         neighbors(src).each do |neighbor|
           if player(neighbor) != player(src) && dice(src) > dice(neighbor)
-            dices      << dice(neighbor)
-            moves      << attack(dup_board, cur_player, src, neighbor, dice(src))
-            attack_lst << [src, neighbor]
+            attack_lst << AttackingMove.new(src, neighbor)
+            # dices      << dice(neighbor)
+            # moves      << attack(dup_board, cur_player, src, neighbor, dice(src))
+            # attack_lst << [src, neighbor]  # リストだとマジックナンバー化する→クラス化を行う
           end
         end
       end
-      return moves, dices, attack_lst
+      attack_lst
+      # return moves, dices, attack_lst
+      # moves -> 攻撃後の盤面を入れた配列
+      # dices -> 攻撃した時に取得するダイスの数
+      # attack+lst -> 攻撃の手
     end
+    # attackable->攻撃可能 clientはこれを呼び出した時に攻撃可能かどうかの返り値を期待する。＝＞メソッド名と返り値が一致しない
+    # 極端attack_lstがあればmoves, dicesは生成できる＝＞情報の重複
 
-    def attack(board, player, src, dst, dice)
-      board.map.with_index do |ary, idx|
+    # attackable(攻撃のての配列を取得).attack_and_collect_next_board(attackableの配列をイテレータを使用して実際に攻撃)
+
+    # attacking_moveをクラス化
+
+    def attack(player, src, dst)
+      @board.map.with_index do |ary, idx|
         next [player, 1]        if idx == src
         next [player, dice - 1] if idx == dst
         ary
@@ -97,6 +150,10 @@ module DiceWars
 
     class << self
       def gen_board
+        gen_array.map { |ary| ary = [Board.gen_random_player, Board.gen_random_dice] }
+      end
+
+      def gen_grids
         gen_array.map { |ary| ary = [Board.gen_random_player, Board.gen_random_dice] }
       end
 
