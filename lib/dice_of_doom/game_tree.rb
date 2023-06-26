@@ -12,6 +12,11 @@ module DiceOfDoom
                               node.attack_lst)
                    end
 
+
+      @game_tree.spare = 3
+      p @game_tree.board.grids
+      @game_tree.board.add_new_dice(@game_tree.player, @game_tree.spare)
+      p @game_tree.board.grids
     end
 
     def add_passing_move(moves)
