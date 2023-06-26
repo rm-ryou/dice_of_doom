@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
 $:.unshift File.join(__dir__, '../lib')
-require "dice_wars"
+require "dice_of_doom"
 
 USAGE =<<EOF
 Command:
@@ -18,14 +18,17 @@ begin
   raise RuntimeError if BOARD_SIZE <= 1
   case PLAYER
   when /^computer$/i
-    player = DiceWars::Computer.new
+    puts DiceOfDoom.version
+    # player = DiceWars::Computer.new
   when /^human$/i
-    player = DiceWars::Computer.new
+    puts DiceOfDoom.version
+    # player = DiceWars::Computer.new
   else
     raise RuntimeError
   end
-  game = DiceWars::Command.new(player)
-  game.play_vs_computer
+  DiceOfDoom::GameTree.new
+  # game = DiceWars::Command.new(player)
+  # game.play_vs_computer
 rescue RuntimeError
   puts USAGE
 end

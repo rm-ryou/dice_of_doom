@@ -1,13 +1,7 @@
-module DiceWars
+module DiceOfDoom
   class Node
+    attr_accessor :spare
     attr_reader :board, :player, :spare, :first_move, :attack_lst, :child
-
-    # nodeではdataが与えられてそれをchildに入れることしかしない
-    # dataしかしらない
-    # def initialize(data)
-    #   @data   = data
-    #   @child  = []
-    # end
 
     def initialize(board, player, spare = 0, first_move = true, attack_lst = [])
       @board      = board
@@ -20,7 +14,6 @@ module DiceWars
 
     def add_child(node)
       @child = node
-      # @child.push(node)
     end
 
     def first_move?
