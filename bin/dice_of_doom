@@ -26,7 +26,7 @@ begin
   else
     raise RuntimeError
   end
-  DiceOfDoom::GameTree.new
+  DiceOfDoom::Command.new
   # game = DiceWars::Command.new(player)
   # game.play_vs_computer
 rescue RuntimeError

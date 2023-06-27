@@ -1,6 +1,5 @@
 module DiceOfDoom
   class Node
-    attr_accessor :spare
     attr_reader :board, :player, :spare, :first_move, :attack_lst, :child
 
     def initialize(board, player, spare = 0, first_move = true, attack_lst = [])

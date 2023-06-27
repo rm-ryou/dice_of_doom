@@ -2,6 +2,7 @@ require "dice_of_doom/attacking_move"
 require "dice_of_doom/board"
 require "dice_of_doom/node"
 require "dice_of_doom/game_tree"
+require "dice_of_doom/command"
 
 module DiceOfDoom
   VERSION = '1.0.0'.freeze

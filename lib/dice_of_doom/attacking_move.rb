@@ -7,5 +7,9 @@ module DiceOfDoom
       @dst_index = dst_index
       @attacker  = attacker
     end
+
+    def list
+      [@src_index, @dst_index]
+    end
   end
 end

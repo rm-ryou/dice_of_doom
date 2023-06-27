@@ -22,10 +22,10 @@ module DiceOfDoom
 
     def initialize(grids = nil)
       @grids = grids ? grids : Board.gen_grids
-      @memo_neighbors ||= {}
     end
 
     def neighbors_of(mass)
+      @memo_neighbors ||= {}
       return @memo_neighbors[mass] if @memo_neighbors.has_key?(mass)
 
       up    = mass - ::BOARD_SIZE
@@ -50,9 +50,7 @@ module DiceOfDoom
       @grids.size.times do |src|
         next if player_of(@grids[src]) != cur_player
         neighbors_of(src).each do |dst|
-          if player_of(@grids[dst]) != player_of(@grids[src]) && dice_of(@grids[src]) > dice_of(@grids[dst])
-            attack_lst << AttackingMove.new(src, dst, cur_player)
-          end
+          attack_lst << AttackingMove.new(src, dst, cur_player) if can_attacking?(src, dst)
         end
       end
       attack_lst
@@ -79,6 +77,10 @@ module DiceOfDoom
     end
 
     private
+
+    def can_attacking?(src, dst)
+      player_of(@grids[dst]) != player_of(@grids[src]) && dice_of(@grids[src]) > dice_of(@grids[dst])
+    end
 
     def cache_neighbors(mass, neighbors)
       @memo_neighbors[mass] = neighbors.map.sort.select { |neighbor| neighbor >= 0 && neighbor < ::BOARD_HEXNUM }
