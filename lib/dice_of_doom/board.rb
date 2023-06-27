@@ -38,11 +38,11 @@ module DiceOfDoom
     end
 
     def apply_attacking_move(move)
-      # @grids.map.with_index do |grid, idx|
-      #   next [move.attacker, 1] if idx == move.src_index
-      #   next [move.attacker, dice_of(@grids[] if idx == move.dst_index
-      #   grid
-      # end
+      dup_board.map.with_index do |grid, index|
+        next [move.attacker, 1]                                   if index == move.src_index
+        next [move.attacker, dice_of(@grids[move.src_index]) - 1] if index == move.dst_index
+        grid
+      end
     end
 
     def attacking_moves(cur_player)
@@ -70,8 +70,6 @@ module DiceOfDoom
       add_new_dice(cur_player, spare_dice)
     end
 
-    private
-
     def player_of(grid)
       grid[0]
     end
@@ -80,8 +78,18 @@ module DiceOfDoom
       grid[1]
     end
 
+    private
+
     def cache_neighbors(mass, neighbors)
       @memo_neighbors[mass] = neighbors.map.sort.select { |neighbor| neighbor >= 0 && neighbor < ::BOARD_HEXNUM }
+    end
+
+    def dup_board
+      new_grids = Board.gen_array
+      @grids.each_with_index do |grid, index|
+        new_grids[index] = grid.dup
+      end
+      new_grids
     end
 
   end
