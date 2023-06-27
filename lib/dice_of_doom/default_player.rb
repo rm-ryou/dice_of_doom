@@ -13,7 +13,7 @@ module DiceOfDoom
         i += 1
       end
       while state.child[i]
-        str += "#{i + 1}. #{state.child[i].attack_lst[0]} -> #{state.child[i].attack_lst[1]}\n" if state.child[i].attack_lst?
+        str += "#{i + 1}. #{state.child[i].attack_lst[0]} -> #{state.child[i].attack_lst[1]}\n" if state.child[i].attack_lst
         i += 1
       end
       str

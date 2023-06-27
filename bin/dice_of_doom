@@ -18,16 +18,15 @@ begin
   raise RuntimeError if BOARD_SIZE <= 1
   case PLAYER
   when /^computer$/i
-    puts DiceOfDoom.version
     player = DiceOfDoom::Computer.new
   when /^human$/i
     puts DiceOfDoom.version
-    # player = DiceWars::Computer.new
+    player = DiceOfDoom::Human.new
   else
     raise RuntimeError
   end
   game = DiceOfDoom::Command.new(player)
-  # game.play_vs_computer
+  game.play_vs_computer
 rescue RuntimeError
   puts USAGE
 end

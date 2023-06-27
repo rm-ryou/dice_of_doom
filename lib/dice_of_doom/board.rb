@@ -58,7 +58,8 @@ module DiceOfDoom
 
     def add_new_dice(cur_player, spare_dice)
       players_territory = @grids.each.collect { |grid| grid if player_of(grid) == cur_player && dice_of(grid) < ::MAX_DICE }.compact
-      return if players_territory.empty? || spare_dice == 0
+      # p players_territory
+      return if players_territory.empty? || spare_dice <= 0
       players_territory.each do |grid|
         if spare_dice > 0 && dice_of(grid) < ::MAX_DICE
           grid[1] += 1
@@ -74,6 +75,19 @@ module DiceOfDoom
 
     def dice_of(grid)
       grid[1]
+    end
+
+    def draw_board(cur_player)
+      str = ''
+      ::BOARD_SIZE.times do |y|
+        str += "  " * (::BOARD_SIZE - y - 1)
+        ::BOARD_SIZE.times do |x|
+          id = ::BOARD_SIZE * y + x
+          str += "#{cur_player.letter(player_of(@grids[id]))}-#{dice_of(@grids[id])} "
+        end
+        str += "\n"
+      end
+      str
     end
 
     private
