@@ -19,15 +19,14 @@ begin
   case PLAYER
   when /^computer$/i
     puts DiceOfDoom.version
-    # player = DiceWars::Computer.new
+    player = DiceOfDoom::Computer.new
   when /^human$/i
     puts DiceOfDoom.version
     # player = DiceWars::Computer.new
   else
     raise RuntimeError
   end
-  DiceOfDoom::Command.new
-  # game = DiceWars::Command.new(player)
+  game = DiceOfDoom::Command.new(player)
   # game.play_vs_computer
 rescue RuntimeError
   puts USAGE
