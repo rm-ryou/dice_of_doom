@@ -18,8 +18,7 @@ module DiceOfDoom
     def attacking_moves
       @cur_node.board.attacking_moves(@cur_node.situation.id).map do |attacking_move|
         attacked_board = @cur_node.board.apply_attacking_move(attacking_move)
-        attack_move = [attacking_move.src_index, attacking_move.dst_index]
-        Node.new(Board.new(attacked_board), Situation.new(@cur_node.situation), attack_move)
+        Node.new(Board.new(attacked_board), Situation.new(@cur_node.situation), attacking_move.list)
       end
     end
   end
