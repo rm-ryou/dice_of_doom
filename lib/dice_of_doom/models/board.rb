@@ -68,7 +68,18 @@ module DiceOfDoom
       add_new_dice(player_id, spare_dice)
     end
 
-    private
+    def draw(player)
+      str = ''
+      ::BOARD_SIZE.times do |y|
+        str += "  " * (::BOARD_SIZE - y - 1)
+        ::BOARD_SIZE.times do |x|
+          id = ::BOARD_SIZE * y + x
+          str += "#{player.letter(player_of(@grids[id]))}-#{dice_of(@grids[id])} "
+        end
+        str += "\n"
+      end
+      str
+    end
 
     def player_of(grid)
       grid[0]
@@ -81,6 +92,8 @@ module DiceOfDoom
     def attacable?(src, dst)
       player_of(@grids[dst]) != player_of(@grids[src]) && dice_of(@grids[src]) > dice_of(@grids[dst])
     end
+
+    private
 
     def cache_neighbors(mass, neighbors)
       @memo_neighbors[mass] = neighbors.map.sort.select { |neighbor| neighbor >= 0 && neighbor < ::BOARD_HEXNUM }

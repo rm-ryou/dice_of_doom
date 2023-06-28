@@ -1,6 +1,6 @@
 module DiceOfDoom
   class Node
-    attr_reader :board, :situation, :attack_move
+    attr_reader :board, :situation, :attack_move, :child
 
     def initialize(board, situation, attack_move = [])
       @board        = board
