@@ -56,6 +56,18 @@ module DiceOfDoom
       attack_list
     end
 
+    def add_new_dice(player_id, spare_dice)
+      players_territory = @grids.each.collect { |grid| grid if player_of(grid) == player_id && dice_of(grid) < ::MAX_DICE }.compact
+      return if players_territory.empty? || spare_dice <= 0
+      players_territory.each do |grid|
+        if spare_dice > 0 && dice_of(grid) < ::MAX_DICE
+          grid[1] += 1
+          spare_dice -= 1
+        end
+      end
+      add_new_dice(player_id, spare_dice)
+    end
+
     private
 
     def player_of(grid)

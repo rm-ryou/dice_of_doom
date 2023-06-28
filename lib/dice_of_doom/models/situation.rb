@@ -12,5 +12,9 @@ module DiceOfDoom
       (id + 1) % ::NUM_PLAYERS
     end
 
+    def first_move?
+      @first_move
+    end
+
   end
 end
