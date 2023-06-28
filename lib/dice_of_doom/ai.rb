@@ -6,7 +6,7 @@ module DiceOfDoom
       return if depth == 1
 
       node.child.each do |new_parent|
-        new_parent.add_child(::DiceOfDoom::GameTree.new(new_parent).next_moves.child)
+        new_parent.add_child(::DiceOfDoom::GameTree.new(new_parent).next_nodes.child)
         limit_tree_depth(new_parent, depth - 1)
       end
       node
@@ -15,7 +15,7 @@ module DiceOfDoom
     def score_board(node)
       sum = 0
       (0 ... ::BOARD_HEXNUM).each do |i|
-        sum += if node.board.player(i) == node.player
+        sum += if node.board.player_of(node.board.grids[i]) == node.situation.id
                  -1
                elsif threatened(i, node.board)
                  2
@@ -27,8 +27,8 @@ module DiceOfDoom
     end
 
     def threatened(pos, board)
-      board.neighbors(pos).each do |neighbor|
-        return true if board.player(pos) != board.player(neighbor) && board.dice(neighbor) > board.dice(pos)
+      board.neighbors_of(pos).each do |neighbor|
+        return true if board.attacable?(neighbor, pos)
       end
       false
     end
@@ -50,16 +50,13 @@ module DiceOfDoom
     end
 
     def ab_rate_position(tree, player, upper_limit, lower_limit)
-      if tree.child.empty?
-        score_board(tree)
+      return score_board(tree) if tree.child.empty?
+      if tree.situation.id == player
+        ab_get_ratings_max(tree, player, upper_limit, lower_limit).max
       else
-        if tree.player == player
-          ab_get_ratings_max(tree, player, upper_limit, lower_limit).max
-        else
-          ab_get_ratings_min(tree, player, upper_limit, lower_limit).min
-        end
+        ab_get_ratings_min(tree, player, upper_limit, lower_limit).min
       end
     end
+
   end
 end
-

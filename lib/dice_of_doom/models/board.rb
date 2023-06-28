@@ -1,103 +1,10 @@
-# boardのロジック多すぎる
-
-module DiceWars
-  class Board < Array
-    attr_accessor :board
-
-    def initialize(board = Board.gen_board)
-      @board = board
-    end
-
-    def cache_neighbors(pos, table)
-      @memo_neighbors[pos] = table.map.sort.select { |num| num >= 0 && num < ::BOARD_HEXNUM }
-      @memo_neighbors[pos]
-    end
-
-    def neighbors(pos)
-      @memo_neighbors ||= {}
-      return @memo_neighbors[pos] if @memo_neighbors.has_key?(pos)
-
-      up    = pos - ::BOARD_SIZE
-      down  = pos + ::BOARD_SIZE
-      table = [up, down]
-      table << up - 1 << pos - 1    unless pos % ::BOARD_SIZE == 0
-      table << pos + 1 << down + 1  unless (pos + 1) % ::BOARD_SIZE == 0
-      cache_neighbors(pos, table)
-    end
-
-    def add_new_dice(cur_player, spare_dice)
-      loop do
-        num_before_allocating = spare_dice
-        (0 ... ::BOARD_HEXNUM).each do |i|
-          next unless player(i) == cur_player
-          if dice(i) < ::MAX_DICE && spare_dice > 0
-            @board[i][1] += 1
-            spare_dice -= 1
-          end
-        end
-        break if spare_dice <= 0 || spare_dice == num_before_allocating
-      end
-    end
-
-    # 単にattackableなboardの配列を返すのみ
-    def attackable(cur_player)
-      moves       = []
-      dices       = []
-      attack_lst  = []
-      (0 ... ::BOARD_HEXNUM).each do |src|
-        next if player(src) != cur_player
-        neighbors(src).each do |neighbor|
-          if player(neighbor) != player(src) && dice(src) > dice(neighbor)
-            dices      << dice(neighbor)
-            moves      << attack(dup_board, cur_player, src, neighbor, dice(src))
-            attack_lst << [src, neighbor]
-          end
-        end
-      end
-      return moves, dices, attack_lst
-    end
-
-    def attack(board, player, src, dst, dice)
-      board.map.with_index do |ary, idx|
-        next [player, 1]        if idx == src
-        next [player, dice - 1] if idx == dst
-        ary
-      end
-    end
-
-    def player(idx)
-      @board[idx][0]
-    end
-
-    def dice(idx)
-      @board[idx][1]
-    end
-
-    # @boardをdupしたいからインスタンスメソッド
-    def dup_board
-      new_board = Board.gen_array
-      @board.each.with_index do |ary, idx|
-        new_board[idx] = ary.dup
-      end
-      new_board
-    end
-
-    def draw_board(cur_player)
-      str = ''
-      ::BOARD_SIZE.times do |y|
-        str += "  " * (::BOARD_SIZE - y - 1)
-        ::BOARD_SIZE.times do |x|
-          id = ::BOARD_SIZE * y + x
-          str += "#{cur_player.letter(player(id))}-#{dice(id)} "
-        end
-        str += "\n"
-      end
-      str
-    end
+module DiceOfDoom
+  class Board
+    attr_reader :grids
 
     class << self
-      def gen_board
-        gen_array.map { |ary| ary = [Board.gen_random_player, Board.gen_random_dice] }
+      def gen_grids
+        gen_array.map { |grid| grid = [gen_random_player, gen_random_dice] }
       end
 
       def gen_array
@@ -111,6 +18,93 @@ module DiceWars
       def gen_random_player
         Random.new.rand(0 .. 1)
       end
+    end
+
+    def initialize(grids = nil)
+      @grids = grids ? grids : Board.gen_grids
+    end
+
+    def neighbors_of(mass)
+      @memo_neighbors ||= {}
+      return @memo_neighbors[mass] if @memo_neighbors.has_key?(mass)
+
+      up   = mass - ::BOARD_SIZE
+      down = mass + ::BOARD_SIZE
+      neighbors = [up, down]
+      neighbors << up - 1   << mass - 1 unless mass       % ::BOARD_SIZE == 0
+      neighbors << down + 1 << down + 1 unless (mass + 1) % ::BOARD_SIZE == 0
+      cache_neighbors(mass, neighbors)
+      @memo_neighbors[mass]
+    end
+
+    def apply_attacking_move(move)
+      dup_grids.map.with_index do |grid, index|
+        next [move.attacker, 1]                                   if index == move.src_index
+        next [move.attacker, dice_of(@grids[move.src_index]) - 1] if index == move.dst_index
+        grid
+      end
+    end
+
+    def attacking_moves(player_id)
+      attack_list = []
+      @grids.size.times do |src|
+        next if player_of(@grids[src]) != player_id
+        neighbors_of(src).each do |dst|
+          attack_list << AttackingMove.new(src, dst, player_id) if attacable?(src, dst)
+        end
+      end
+      attack_list
+    end
+
+    def add_new_dice(player_id, spare_dice)
+      players_territory = @grids.each.collect { |grid| grid if player_of(grid) == player_id && dice_of(grid) < ::MAX_DICE }.compact
+      return if players_territory.empty? || spare_dice <= 0
+      players_territory.each do |grid|
+        if spare_dice > 0 && dice_of(grid) < ::MAX_DICE
+          grid[1] += 1
+          spare_dice -= 1
+        end
+      end
+      add_new_dice(player_id, spare_dice)
+    end
+
+    def draw(player)
+      str = ''
+      ::BOARD_SIZE.times do |y|
+        str += "  " * (::BOARD_SIZE - y - 1)
+        ::BOARD_SIZE.times do |x|
+          id = ::BOARD_SIZE * y + x
+          str += "#{player.letter(player_of(@grids[id]))}-#{dice_of(@grids[id])} "
+        end
+        str += "\n"
+      end
+      str
+    end
+
+    def player_of(grid)
+      grid[0]
+    end
+
+    def dice_of(grid)
+      grid[1]
+    end
+
+    def attacable?(src, dst)
+      player_of(@grids[dst]) != player_of(@grids[src]) && dice_of(@grids[src]) > dice_of(@grids[dst])
+    end
+
+    private
+
+    def cache_neighbors(mass, neighbors)
+      @memo_neighbors[mass] = neighbors.map.sort.select { |neighbor| neighbor >= 0 && neighbor < ::BOARD_HEXNUM }
+    end
+
+    def dup_grids
+      new_grids = Board.gen_array
+      @grids.each_with_index do |grid, index|
+        new_grids[index] = grid.dup
+      end
+      new_grids
     end
   end
 end
