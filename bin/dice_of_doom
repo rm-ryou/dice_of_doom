@@ -9,7 +9,7 @@ Command:
 EOF
 
 PLAYER        = ARGV[0] == nil ? "computer" : ARGV[0]
-BOARD_SIZE    = ARGV[1] == nil ? 3 : ARGV[1].to_i
+BOARD_SIZE    = ARGV[1] == nil ? 5 : ARGV[1].to_i
 BOARD_HEXNUM  = BOARD_SIZE ** 2
 NUM_PLAYERS   = 2
 MAX_DICE      = 3

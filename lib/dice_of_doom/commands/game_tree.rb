@@ -6,13 +6,9 @@ module DiceOfDoom
                [0, 1], [0, 3], [0, 2],
                [1, 2], [1, 3], [0, 3]]
       @cur_node = if !node
-                    # Node.new(Board.new(board), Situation.new(0))
                     Node.new(Board.new(Board.gen_grids), Situation.new(0))
                   else
                     node
-                    # Node.new(node.board,
-                    #          node.situation,
-                    #          node.attack_move)
                   end
     end
 
@@ -37,7 +33,8 @@ module DiceOfDoom
         attacked_board = @cur_node.board.apply_attacking_move(attacking_move)
         # Node.new(Board.new(attacked_board), Situation.new(@cur_node.situation), attacking_move.list)
         next_situation = Situation.new(@cur_node.situation.id, @cur_node.situation.spare_dice + @cur_node.board.dice_of(attacking_move.dst_index), false)
-        Node.new(Board.new(attacked_board), next_situation, attacking_move.list)
+        # Node.new(Board.new(attacked_board), next_situation, attacking_move.list)
+        Node.new(attacked_board, next_situation, attacking_move.list)
       end
     end
   end
